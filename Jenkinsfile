@@ -34,7 +34,7 @@ pipeline {
         }
 
         // Optional: Uncomment this stage if you want to deploy to Kubernetes via `kubectl`
-        /*
+        
         stage('Deploy to Kubernetes') {
             steps {
                 echo 'Deploying to Kubernetes cluster...'
@@ -44,7 +44,7 @@ pipeline {
                 '''
             }
         }
-        */
+        
     }
 
     post {
