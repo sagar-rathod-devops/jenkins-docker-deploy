@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-api-deployment
+  labels:
+    app: user-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-api
+  template:
+    metadata:
+      labels:
+        app: user-api
+    spec:
+      containers:
+        - name: user-api-container
+          image: 248189939111.dkr.ecr.us-east-1.amazonaws.com/user-api-devops:latest
+          ports:
+            - containerPort: 8000
+      imagePullSecrets:
+        - name: ecr-secret

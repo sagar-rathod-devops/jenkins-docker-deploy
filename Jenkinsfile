@@ -1,27 +1,44 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "python-http-server"
+        CONTAINER_NAME = "python-http-container"
+        PORT = "8000"
+    }
+
     stages {
         stage('Clone Repository') {
             steps {
+                echo 'Cloning repository...'
                 git branch: 'main', url: 'https://github.com/sagar-rathod-devops/jenkins-docker-deploy.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t python-http-server .'
+                echo "Building Docker image: ${IMAGE_NAME}"
+                sh "docker build -t ${IMAGE_NAME} ."
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                // Stop old container and run new one
-                sh '''
-                    docker rm -f python-http-container || true
-                    docker run -d --name python-http-container -p 8000:8000 python-http-server
-                '''
+                echo "Stopping old container if exists and running new container..."
+                sh """
+                    docker rm -f ${CONTAINER_NAME} || true
+                    docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} ${IMAGE_NAME}
+                """
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment completed successfully!'
+        }
+        failure {
+            echo 'Deployment failed. Check the logs.'
         }
     }
 }
